@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface|Poppins">
+    <link rel="shortcut icon"  href="favicon.png" type="image/x-icon">
+    <style type="text/css">
+      body{
+        font-family: Poppins, sans-serif;
+        font-size: 17px; 
+      }
+      #head span{
+        color: #fdac53;
+        background-color: rgb(38, 38, 38);
+        border-radius: 10px;
+        font-size: 46px;
+        padding-left: 10px;
+        padding-right: 20px;
+        font-family: "Cursive", Lucida Handwriting; style="color: black;border-style: inset;display:block;" 
+      }
+    </style>
+
+    <title>TODO List</title>
+  </head>
+  <body> 
+
+    <div class="container my-4">
+        <h1 id="head"class=" d-flex justify-content-center"><span>TODO List</span></h1>
+  <form  action=" ">
+    <div class="row my-4 d-flex justify-content-center">
+  <div class="col form-group ">
+    <label for="text"><h3><b>Title</b></h3></label>
+    <input type="text" style="color: black;border-style: inset;display:block;box-shadow: 5px 5px 5px grey;" class="form-control" id="title" aria-describedby="emailHelp" placeholder="Enter the task.">
+    <small id="emailHelp" class="form-text text-muted"><b>Add a task to the list.</b></small>
+  </div>
+  <div class="col form-group ">
+    <label for="description"><h3><b>Description</b></h3></label>
+    <textarea class="form-control" style="color: black;border-style: inset;display:block;box-shadow: 5px 5px 5px grey;" id="description" rows="3" placeholder="Give the description of the given item."></textarea>
+  </div>
+  </div>
+   <button id="add"class="btn btn-outline-dark btn-lg"><b>Add Task</b></button> 
+  <button id="clear" class="btn btn-outline-danger btn-lg mx-3 " onclick="clearStorage()"><b>Clear List</b></button>
+  </form>
+<div id="items" class=" my-4">
+    <div><h2><b>Your Tasks</b></h2><h5 class="my-3"><b>Total Tasks: </b><b><span id="number"></span></b></h5></div>
+    <table class="table table-light shadow-lg p-3 mb-5 bg-body rounded ">
+  <thead>
+    <tr class="">
+      <th scope="col"><b>Item Title</b></th>
+      <th scope="col"><b>Item Description</b></th>
+      <th scope="col"><b>Time</b></th>
+      <th scope="col"><b>Action</b></th>
+    </tr>
+  </thead>
+  <tbody id="tableBody">
+    <tr >
+      <td>You need coffee</td>
+      <td>As you are a coder you need coffee</td>
+      <td>11-07-2021</td>
+      <td><button class="btn  btn-sm btn-success">Done</button></td>
+    </tr>
+    
+  </tbody>
+  <tr></tr>
+</table>
+</div>
+    </div>
+
+    <!-- Optional JavaScript; choose one of the two! -->
+
+    <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+
+    <!-- Option 2: jQuery, Popper.js, and Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s" crossorigin="anonymous"></script>
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
+    <script type="text/javascript">
+        function getAndupdate(){
+            tit = document.getElementById("title").value;
+            desc = document.getElementById("description").value;
+            if (!tit || !desc){
+             alert("Please fill any task");              
+            }
+            else{
+
+            var d = new Date();
+
+            var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+            var dayName = days[d.getDay()];
+
+            Date_time = d.toLocaleString('en-US',{ hour: 'numeric', minute: 'numeric', hour12: true })
+
+            Time = dayName + ', ' + Date_time;
+            if (localStorage.getItem('itemsJson') == null){
+                itemJsonArray = [];
+                itemJsonArray.push([tit, desc,Time]);
+                localStorage.setItem('itemsJson', JSON.stringify(itemJsonArray))
+            }
+            else{
+                itemJsonArrayStr = localStorage.getItem('itemsJson');
+                itemJsonArray = JSON.parse(itemJsonArrayStr);
+                itemJsonArray.push([tit, desc,Time]);
+                localStorage.setItem('itemsJson', JSON.stringify(itemJsonArray))
+            }
+            update() 
+
+        }
+        }
+            function update(){
+                if (localStorage.getItem('itemsJson') == null){
+                itemJsonArray = [];
+                localStorage.setItem('itemsJson', JSON.stringify(itemJsonArray))
+                }
+
+            else{
+                itemJsonArrayStr = localStorage.getItem('itemsJson');
+                itemJsonArray = JSON.parse(itemJsonArrayStr);
+                }
+          
+          document.getElementById("number").innerHTML =itemJsonArray.length;
+        // populate the table
+        let tableBody = document.getElementById("tableBody");
+        let str = "";
+        itemJsonArray.forEach((element, index)=>{
+            str+= `
+            <tr>
+      
+      <td>${element[0]}</td>
+      <td>${element[1]}</td>
+      <td>${element[2]}</td>
+      <td><button class="btn btn-outline-success"onclick="deleted(${index})"><b>✓</b></button></td>
+      </tr>
+      `
+        });
+        tableBody.innerHTML = str;
+
+        }
+        add = document.getElementById('add');
+        add.addEventListener("click",getAndupdate);
+        update();
+          
+
+        function deleted(itemIndex){
+            itemJsonArrayStr = localStorage.getItem('itemsJson');
+            itemJsonArray = JSON.parse(itemJsonArrayStr);
+            itemJsonArray.splice(itemIndex, 1);
+            localStorage.setItem('itemsJson', JSON.stringify(itemJsonArray));
+            update();
+            swal({
+                title: "Good job!",
+                text: "You Completed the task!",
+                icon: "success",
+                button: "Great",
+                });
+       };
+       function clearStorage(){
+        if (window.confirm("Do you really want to clear the list.")){
+            localStorage.clear();
+            update()
+        }
+        }
+        
+    </script>
+  </body>
+        
+</html>
